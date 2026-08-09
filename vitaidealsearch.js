@@ -1,4 +1,4 @@
-function () {
+(function () {
   "use strict";
 
   if (window.__VITAIDEAL_LIVE_SEARCH__) return;
