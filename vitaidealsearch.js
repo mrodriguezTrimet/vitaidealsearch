@@ -401,76 +401,59 @@
     return "";
   }
 
-  function openProduct(
-    product
-  ) {
-    if (!product) return;
+function openProduct(product) {
+  if (!product) return;
 
-    var productId =
-      Number(product.id);
+  var productId = Number(product.id);
 
-    var fallbackUrl =
-      normalizeUrl(
-        product.url
-      );
+  var productUrl = normalizeUrl(
+    product.url
+  );
 
-    closeBox();
+  closeBox();
 
-    console.log(
-      "[Vitaideal Live Search] Produkt geöffnet:",
-      productId,
-      product.name || ""
-    );
+  console.log(
+    "[Vitaideal Live Search] Produkt:",
+    productId,
+    product.name || "",
+    productUrl
+  );
 
-    /*
-     * Bevorzugt Ecwid.
-     * Dadurch bleibt der eingebettete
-     * Shop aktiv.
-     */
-    if (
-      window.Ecwid &&
-      typeof window.Ecwid
-        .openPage ===
-        "function" &&
-      Number.isFinite(
-        productId
-      )
-    ) {
-      try {
-        window.Ecwid.openPage(
-          "product",
-          {
-            id: productId
-          }
-        );
-
-        return;
-      } catch (error) {
-        console.warn(
-          "[Vitaideal Live Search] Ecwid.openPage fehlgeschlagen:",
-          error
-        );
-      }
-    }
-
-    /*
-     * Falls Ecwid.openPage nicht
-     * verfügbar ist, normale
-     * Produkt-URL öffnen.
-     */
-    if (fallbackUrl) {
-      window.location.assign(
-        fallbackUrl
-      );
-
-      return;
-    }
-
-    console.warn(
-      "[Vitaideal Live Search] Keine Produkt-URL verfügbar:",
-      product
-    );
+  /*
+   * Wichtig:
+   * Immer direkt zur Produktseite navigieren.
+   * Dadurch funktioniert die Suche auch auf
+   * Seiten ohne eingebettete Ecwid-Storefront.
+   */
+  if (productUrl) {
+    window.location.assign(productUrl);
+    return;
   }
+
+  /*
+   * Nur Fallback, falls Ecwid keine URL
+   * geliefert haben sollte.
+   */
+  if (
+    window.Ecwid &&
+    typeof window.Ecwid.openPage === "function" &&
+    Number.isFinite(productId)
+  ) {
+    try {
+      window.Ecwid.openPage(
+        "product",
+        {
+          id: productId
+        }
+      );
+    } catch (error) {
+      console.error(
+        "[Vitaideal Live Search] Produkt konnte nicht geöffnet werden:",
+        error
+      );
+    }
+  }
+}
 
   function renderProducts(
     input,
