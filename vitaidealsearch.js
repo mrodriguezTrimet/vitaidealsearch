@@ -784,16 +784,20 @@ function openProduct(product) {
       "Suche …"
     );
 
-    var url =
-      "https://app.ecwid.com/api/v3/" +
-      STORE_ID +
-      "/products?keyword=" +
-      encodeURIComponent(
-        query + "*"
-      ) +
-      "&searchMethod=STOREFRONT" +
-      "&limit=" +
-      MAX_RESULTS;
+   var STORE_PAGE_URL =
+  "https://www.vitaideal.de/home/";
+
+var url =
+  "https://app.ecwid.com/api/v3/" +
+  STORE_ID +
+  "/products?keyword=" +
+  encodeURIComponent(query + "*") +
+  "&searchMethod=STOREFRONT" +
+  "&limit=" +
+  MAX_RESULTS +
+  "&cleanUrls=true" +
+  "&baseUrl=" +
+  encodeURIComponent(STORE_PAGE_URL);
 
     fetch(
       url,
